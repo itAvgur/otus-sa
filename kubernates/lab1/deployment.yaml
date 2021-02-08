@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab-one-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lab-one-app
+  template:
+    metadata:
+      labels:
+        app: lab-one-app
+    spec:
+      containers:
+        - name: lab-one
+          image: itavgur/otus:0.1
+          ports:
+            - name: pseudo-web
+              containerPort: 8000
+
