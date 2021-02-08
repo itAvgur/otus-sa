@@ -1,8 +1,6 @@
 package com.itavgur.otus.sa.lab1.web.dto;
 
-
-import com.sun.org.apache.regexp.internal.RE;
-import lombok.*;
+import lombok.Value;
 
 @Value
 public class StatusDto {
