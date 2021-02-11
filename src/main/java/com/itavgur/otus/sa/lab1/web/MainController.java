@@ -6,12 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@RestController("/")
+@RestController
 public class MainController {
 
     @GetMapping("/health")
     public StatusDto getHealth() {
         return StatusDto.ok();
     }
+
 
 }
