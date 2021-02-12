@@ -22,7 +22,9 @@ public class Person {
 
     private String lastName;
 
-    private String city;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "city_id")
+    private City city;
 
     private Boolean enabled;
 
