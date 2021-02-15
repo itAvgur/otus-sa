@@ -9,8 +9,8 @@
         <relativePath/>
     </parent>
     <groupId>com.itavgur.otus.sa</groupId>
-    <artifactId>lab1</artifactId>
-    <version>0.0.1</version>
+    <artifactId>lab</artifactId>
+    <version>0.2</version>
     <name>lab1</name>
     <description>OTUS-SA</description>
     <properties>
