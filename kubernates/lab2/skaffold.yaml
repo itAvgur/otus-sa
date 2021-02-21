@@ -1,0 +1,19 @@
+apiVersion: skaffold/v2beta11
+kind: Config
+metadata:
+  name: lab-
+build:
+  artifacts:
+  - image: itavgur/otus
+    context: lab-app
+    docker:
+      dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+    - config.yaml
+    - postgres.yaml
+    - deployment.yaml
+    - service.yaml
+    - ingress.yaml
+    - job.yaml

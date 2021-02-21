@@ -1,0 +1,66 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: lab-app-db
+spec:
+  template:
+    metadata:
+      name: lab-app-db
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: check-db
+          image: postgres:latest
+          command:
+            - sh
+            - "-c"
+            - until pg_isready -h postgres;
+              do echo waiting for database to start; sleep 3; done;
+      containers:
+        - name: post-install-job
+          image: postgres:latest
+          command:
+            - sh
+            - "-c"
+            -
+              psql postgres://myuser:passwd@postgres/myapp << 'EOF'
+
+              DROP TABLE IF EXISTS otus_sa.person;
+              DROP TABLE IF EXISTS otus_sa.city;
+              DROP SEQUENCE IF EXISTS otus_sa.person_seq;
+              DROP SEQUENCE IF EXISTS otus_sa.city_seq;
+              DROP SCHEMA IF EXISTS otus_sa;
+
+              CREATE SCHEMA otus_sa;
+              CREATE SEQUENCE otus_sa.person_seq START 1000;
+              CREATE SEQUENCE otus_sa.city_seq START 1000;
+
+              CREATE TABLE otus_sa.city
+              (
+              id   bigint PRIMARY KEY DEFAULT nextval('otus_sa.city_seq'),
+              name varchar NOT NULL
+              );
+
+              CREATE TABLE otus_sa.person
+              (
+              id         bigint PRIMARY KEY DEFAULT nextval('otus_sa.person_seq'),
+              first_name varchar NOT NULL,
+              last_name  varchar NOT NULL,
+              city_id    bigint,
+              enabled    boolean            DEFAULT TRUE,
+              FOREIGN KEY (city_id) REFERENCES otus_sa.city (id)
+
+              );
+
+              INSERT INTO otus_sa.city (name)
+              VALUES ('Moscow'),
+              ('Irkutsk');
+
+              INSERT INTO otus_sa.person (first_name, last_name, city_id, enabled)
+              VALUES ('Yuriy', 'Melnikov', 1000, true),
+              ('Luba', 'Zholudeva', 1000, true),
+              ('George', 'Kobichev', 1001, true),
+              ('Sanya', 'Semin', 1001, false);
+
+              EOF
+  backoffLimit: 4
