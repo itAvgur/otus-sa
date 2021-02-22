@@ -1,0 +1,7 @@
+apiVersion: v2
+name: lab-two-chart
+description: A Helm chart for lab-02 OTUS-SA
+
+type: application
+version: 0.2
+appVersion: "0.2"

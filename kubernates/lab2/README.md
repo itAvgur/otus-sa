@@ -1,1 +1,8 @@
-[Postman Collection Lab 2](https://www.getpostman.com/collections/e938d2b29a01c51ffb7f)
+Postman collection:  ./OTUS-SA.postman_collection.json
+
+Options for testing:
+- skaffold -f
+OR
+- 
+        helm install postgres bitnami/postgresql -f .\db\values.yaml
+        helm install myapp .\lab-chart

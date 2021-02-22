@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "88457ead-5cd7-4ded-917b-d560d5319d3e",
+		"name": "OTUS-SA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "lab-02",
+			"item": [
+				{
+					"name": "get Person ALL",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Host",
+								"type": "text",
+								"value": "arch.homework",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://arch.homework/person",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create Person",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Host",
+								"type": "text",
+								"value": "arch.homework",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"TMP\",\r\n    \"lastName\": \"TMP\",\r\n    \"city\": {\r\n        \"id\": 1000,\r\n        \"name\": \"Moscow\"\r\n    },\r\n    \"enabled\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://arch.homework/person",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Person",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Host",
+								"type": "text",
+								"value": "arch.homework",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://arch.homework/person/1004",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"person",
+								"1004"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update Person",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Host",
+								"type": "text",
+								"value": "arch.homework",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"TMP\",\r\n    \"lastName\": \"UPDATED!!!\",\r\n    \"city\": {\r\n        \"id\": 1000,\r\n        \"name\": \"Moscow\"\r\n    },\r\n    \"enabled\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://arch.homework/person/1004",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"person",
+								"1004"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete Person",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Host",
+								"type": "text",
+								"value": "arch.homework",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://arch.homework/person/1004",
+							"protocol": "http",
+							"host": [
+								"arch",
+								"homework"
+							],
+							"path": [
+								"person",
+								"1004"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
