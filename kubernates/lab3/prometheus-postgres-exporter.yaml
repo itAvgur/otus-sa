@@ -1,0 +1,8 @@
+config:
+  datasource:
+    host: my-postgres
+    database: myapp
+    user: myuser
+    password: passwd
+    port: "5432"
+  autoDiscoverDatabases: true

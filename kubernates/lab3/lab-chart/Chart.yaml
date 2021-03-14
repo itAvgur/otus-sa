@@ -1,0 +1,13 @@
+apiVersion: v2
+name: lab-three-chart
+description: A Helm chart for lab-32 OTUS-SA
+
+type: application
+version: 0.3.2
+appVersion: "0.3.2"
+
+dependencies:
+  - name: postgresql
+    version: 10.3.13
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgreslq.enabled

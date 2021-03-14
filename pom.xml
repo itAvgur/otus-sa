@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.itavgur.otus.sa</groupId>
     <artifactId>lab</artifactId>
-    <version>0.3</version>
+    <version>0.3.2</version>
     <name>lab</name>
     <description>OTUS-SA</description>
     <properties>

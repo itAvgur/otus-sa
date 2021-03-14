@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lab-chart.fullname" . }}
+  labels:
+    {{- include "lab-chart.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      name: my-app-port
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: {{ .Values.service.protocol }}
+  selector:
+    {{- include "lab-chart.selectorLabels" . | nindent 4 }}
