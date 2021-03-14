@@ -1,8 +1,7 @@
 Postman collection:  ./OTUS-SA.postman_collection.json
 
 Options for testing:
-- skaffold -f
+- skaffold -f \
 OR
-- 
-        helm install postgres bitnami/postgresql -f .\db\values.yaml
-        helm install myapp .\lab-chart
+- helm dependency update .\lab-chart\
+  helm install myapp .\lab-chart --atomic

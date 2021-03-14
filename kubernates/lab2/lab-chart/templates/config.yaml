@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: lab-two-config
 data:
-  DB_NAME: {{.Values.externalPostgresql.postgresqlDatabase}}
+  DB_NAME: {{.Values.postgresql.postgresqlDatabase}}
 
 ---
 apiVersion: v1
@@ -12,5 +12,5 @@ metadata:
   name: lab-two-secret
 type: Opaque
 data:
-  DB_USER: {{.Values.externalPostgresql.postgresqlUsername}}
-  DB_PASS: {{.Values.externalPostgresql.postgresqlPassword}}
+  DB_USER: {{.Values.postgresql.postgresqlUsername}}
+  DB_PASS: {{.Values.postgresql.postgresqlPassword}}

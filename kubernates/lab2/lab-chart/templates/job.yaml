@@ -22,7 +22,7 @@ spec:
           command:
             - sh
             - "-c"
-            - psql postgres://{{.Values.externalPostgresql.postgresqlUsername | b64dec}}:{{.Values.externalPostgresql.postgresqlPassword | b64dec}}@{{ include "postgresql.fullname" . }}/{{.Values.externalPostgresql.postgresqlDatabase}} << 'EOF'
+            - psql postgres://{{.Values.postgresql.postgresqlUsername | b64dec}}:{{.Values.postgresql.postgresqlPassword | b64dec}}@{{ include "postgresql.fullname" . }}/{{.Values.postgresql.postgresqlDatabase}} << 'EOF'
 
               DROP TABLE IF EXISTS otus_sa.person;
               DROP TABLE IF EXISTS otus_sa.city;

@@ -62,10 +62,10 @@ Create the name of the service account to use
 {{- end }}
 
 {{- define "postgresql.fullname" -}}
-{{- printf .Values.externalPostgresql.serviceName | trunc 63 | trimSuffix "-" -}}
+{{- printf .Values.postgresql.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "postgresql.url" -}}
-{{- printf "%s%s:%s/%s" "jdbc:postgresql://" (include "postgresql.fullname" .) .Values.externalPostgresql.postgresqlPort .Values.externalPostgresql.postgresqlDatabase | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s%s:%s/%s" "jdbc:postgresql://" (include "postgresql.fullname" .) .Values.postgresql.service.port .Values.postgresql.postgresqlDatabase | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
