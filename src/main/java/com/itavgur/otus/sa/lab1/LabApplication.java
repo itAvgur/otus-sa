@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableJpaRepositories("com.itavgur.otus.sa.lab1.repository")
 @EntityScan("com.itavgur.otus.sa.lab1.domain")
-public class Lab1Application {
+public class LabApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Lab1Application.class, args);
+        SpringApplication.run(LabApplication.class, args);
     }
 
 }
