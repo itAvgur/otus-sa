@@ -1,0 +1,24 @@
+{
+	"id": "001ffd01-0227-4eb0-85bb-3a93914b91f1",
+	"name": "localhost:8000",
+	"values": [
+		{
+			"key": "host",
+			"value": "localhost",
+			"enabled": true
+		},
+		{
+			"key": "port",
+			"value": "8000",
+			"enabled": true
+		},
+		{
+			"key": "cardId",
+			"value": "",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2021-03-31T07:17:48.387Z",
+	"_postman_exported_using": "Postman/8.0.8"
+}

@@ -10,19 +10,22 @@
     </parent>
     <groupId>com.itavgur.otus.sa</groupId>
     <artifactId>lab</artifactId>
-    <version>0.3.2</version>
+    <version>0.2.1</version>
     <name>lab</name>
+    <packaging>pom</packaging>
     <description>OTUS-SA</description>
+
     <properties>
         <java.version>1.8</java.version>
         <micrometer.version>1.6.4</micrometer.version>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
 
+    <modules>
+        <module>app</module>
+        <module>auth</module>
+    </modules>
+
+    <dependencies>
         <!-- monitoring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -32,17 +35,6 @@
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
             <version>${micrometer.version}</version>
-        </dependency>
-
-        <!-- DB -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
         </dependency>
 
         <!-- utilities -->
