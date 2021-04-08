@@ -1,6 +1,5 @@
 package com.itavgur.otus.sa.app.service;
 
-import com.itavgur.otus.sa.app.web.dto.UserDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,13 +25,13 @@ public class AuthService {
     @NonFinal
     String authCheckUrl;
 
-    public void checkAuthentication(String sessionId) {
+    public String checkAuthentication(String sessionId) {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Cookie", SESSION_ID_COOKIE + "=" + sessionId);
         HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
 
-        restTemplate.exchange(authCheckUrl, HttpMethod.GET, httpEntity, UserDto.class);
+        return restTemplate.exchange(authCheckUrl, HttpMethod.GET, httpEntity, String.class).getBody();
 
     }
 }

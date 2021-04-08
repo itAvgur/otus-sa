@@ -5,6 +5,7 @@ import com.itavgur.otus.sa.auth.exception.NotFoundException;
 import com.itavgur.otus.sa.auth.service.AuthService;
 import com.itavgur.otus.sa.auth.service.SessionService;
 import com.itavgur.otus.sa.auth.web.dto.LoginDto;
+import com.itavgur.otus.sa.auth.web.dto.UserDto;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,7 +26,6 @@ import java.util.Optional;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
-@RequestMapping(value = "/auth")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthController {
 
@@ -35,29 +36,31 @@ public class AuthController {
 
     @PostMapping("/register")
     @Validated
-    public User register(@RequestBody User user) {
+    public ResponseEntity<UserDto> register(@RequestBody UserDto user) {
 
-        return authService.register(user);
-
+        return new ResponseEntity<>(authService.register(user), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody @Validated LoginDto loginDto, HttpServletResponse response) {
+    public ResponseEntity<User> login(@RequestBody @Validated LoginDto loginDto, HttpServletResponse response) {
 
         User authenticatedUser = authService.authenticate(loginDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("user with login %s doesn't exist", loginDto.getLogin())));
 
+        if (Boolean.FALSE.equals(authenticatedUser.getEnabled())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "user with login disabled");
+        }
         response.addCookie(new Cookie(SESSION_ID_COOKIE, sessionService.create(authenticatedUser)));
-        return authenticatedUser;
+        return new ResponseEntity<>(authenticatedUser, HttpStatus.OK);
 
     }
 
     @GetMapping("/check")
-    public User check(HttpServletRequest httpServletRequest) {
+    public String check(HttpServletRequest httpServletRequest) {
 
         String sessionId = getSessionId(httpServletRequest);
 
-        return sessionService.findUser(sessionId)
+        return sessionService.findUserLogin(sessionId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("sessionId %s doesn't exist", sessionId)));
 
     }

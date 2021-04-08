@@ -37,32 +37,28 @@ public class PersonController {
     PersonService personalService;
     AuthService authService;
 
-    @GetMapping
+    @GetMapping("/all")
     public Iterable<Person> getAll() {
         checkAuthentication();
 
-        return personalService.getPerson();
+        return personalService.getPersonAll();
     }
 
-    @GetMapping("/{id}")
-    public PersonDto getPerson(@PathVariable(name = "id") Long id) throws NotFoundException {
-        checkAuthentication();
-
-        return personalService.getPerson(id);
+    @GetMapping
+    public PersonDto getPerson() throws NotFoundException {
+        String userLogin = checkAuthentication();
+        return personalService.getPersonFromDto(userLogin);
     }
 
     @PostMapping
     public PersonDto createPersonal(@RequestBody PersonDto personDto) {
-        checkAuthentication();
-
         return personalService.createPerson(personDto);
     }
 
-    @PutMapping("/{id}")
-    public PersonDto updatePersonal(@RequestBody PersonDto personDto, @PathVariable("id") Long id) throws NotFoundException {
-        checkAuthentication();
-
-        return personalService.updatePerson(personDto, id);
+    @PutMapping("")
+    public PersonDto updatePersonal(@RequestBody PersonDto personDto) throws NotFoundException {
+        String userLogin = checkAuthentication();
+        return personalService.updatePerson(personDto, userLogin);
     }
 
     @DeleteMapping("/{id}")
@@ -72,7 +68,7 @@ public class PersonController {
         personalService.deletePerson(id);
     }
 
-    private void checkAuthentication() {
+    private String checkAuthentication() {
 
         if (httpServletRequest.getCookies() == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "sessionId empty");
@@ -87,7 +83,7 @@ public class PersonController {
         }
 
         try {
-            authService.checkAuthentication(sessionIdCookie.get().getValue());
+            return authService.checkAuthentication(sessionIdCookie.get().getValue());
         } catch (HttpClientErrorException exception) {
             if (HttpStatus.UNAUTHORIZED == exception.getStatusCode()) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);

@@ -3,6 +3,7 @@ package com.itavgur.otus.sa.app.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Person {
 
-    public static final int START_SEQ = 100000;
+    public static final int START_SEQ = 10000;
 
     @Id
     @GeneratedValue(generator = "person_seq", strategy = GenerationType.SEQUENCE)
@@ -28,5 +29,8 @@ public class Person {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "city_id")
     private City city;
+
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
 
 }

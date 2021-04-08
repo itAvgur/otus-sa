@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 @Entity
 @Data
@@ -14,8 +13,10 @@ import java.time.LocalDate;
 @Table(schema = "auth", name = "users")
 public class User {
 
+    public static final int START_SEQ = 10000;
+
     @Id
-    @SequenceGenerator(name = "user_generator", schema = "auth", sequenceName = "user_seq")
+    @SequenceGenerator(name = "user_generator", schema = "auth", sequenceName = "user_seq", initialValue = START_SEQ, allocationSize = 1)
     @GeneratedValue(generator = "user_generator", strategy = GenerationType.SEQUENCE)
     Long id;
 
@@ -24,18 +25,6 @@ public class User {
 
     @NotNull
     String password;
-
-    @NotNull
-    String email;
-
-    @Column(name = "first_name")
-    String firstName;
-
-    @Column(name = "last_name")
-    String lastName;
-
-    @Column(name = "birth_date")
-    LocalDate birthDate;
 
     Boolean enabled;
 

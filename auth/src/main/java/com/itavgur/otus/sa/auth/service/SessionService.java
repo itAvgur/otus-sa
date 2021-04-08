@@ -3,7 +3,6 @@ package com.itavgur.otus.sa.auth.service;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import com.itavgur.otus.sa.auth.domain.User;
-import com.itavgur.otus.sa.auth.repository.UsersRepository;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
@@ -25,35 +24,28 @@ public class SessionService {
     @NonFinal
     private String sessionTtlMinutes;
 
-    UsersRepository usersRepository;
-    IMap<String, Long> userSessions;
+    IMap<String, String> userSessions;
 
     @Autowired
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    public SessionService(UsersRepository usersRepository, HazelcastInstance hazelcastAuthInstance) {
-        this.usersRepository = usersRepository;
+    public SessionService(HazelcastInstance hazelcastAuthInstance) {
         userSessions = hazelcastAuthInstance.getMap("userSessions");
-
     }
 
     public String create(User userId) {
 
         String sessionId = UUID.randomUUID().toString();
-        userSessions.put(sessionId, userId.getId(), Long.parseLong(sessionTtlMinutes), TimeUnit.MINUTES);
+        userSessions.put(sessionId, userId.getLogin(), Long.parseLong(sessionTtlMinutes), TimeUnit.MINUTES);
         return sessionId;
-
     }
 
-    public Optional<User> findUser(String sessionId) {
+    public Optional<String> findUserLogin(String sessionId) {
 
-        Long userId = userSessions.get(sessionId);
-        return userId == null ? Optional.empty() : usersRepository.findById(userId);
-
+        String userLogin = userSessions.get(sessionId);
+        return userLogin == null ? Optional.empty() : Optional.of(userLogin);
     }
 
     public void remove(String sessionId) {
-
         userSessions.remove(sessionId);
-
     }
 }
