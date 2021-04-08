@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(schema = "OTUS_SA", name = "PERSON")
+@Table(schema = "customers", name = "personal_data")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Person {
@@ -15,17 +15,18 @@ public class Person {
 
     @Id
     @GeneratedValue(generator = "person_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "person_seq", schema = "OTUS_SA", sequenceName = "person_seq", initialValue = START_SEQ, allocationSize = 1)
+    @SequenceGenerator(name = "person_seq", schema = "customers", sequenceName = "personal_data_seq", initialValue = START_SEQ, allocationSize = 1)
     private Long id;
 
+    private String login;
+    private String email;
+    @Column(name = "first_name")
     private String firstName;
-
+    @Column(name = "last_name")
     private String lastName;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "city_id")
     private City city;
-
-    private Boolean enabled;
 
 }

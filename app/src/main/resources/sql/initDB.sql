@@ -1,28 +1,22 @@
-DROP TABLE IF EXISTS otus_sa.person;
-DROP TABLE IF EXISTS otus_sa.city;
-DROP SEQUENCE IF EXISTS otus_sa.person_seq;
-DROP SEQUENCE IF EXISTS otus_sa.city_seq;
-DROP SCHEMA IF EXISTS otus_sa;
+drop schema if exists customers cascade;
+create schema customers;
 
-CREATE SCHEMA otus_sa;
-CREATE SEQUENCE otus_sa.person_seq START 1000;
-CREATE SEQUENCE otus_sa.city_seq START 1000;
-
-CREATE TABLE otus_sa.city
+create sequence customers.personal_data_seq start with 1000;
+create table customers.personal_data
 (
-    id   bigint PRIMARY KEY DEFAULT nextval('otus_sa.city_seq'),
-    name varchar NOT NULL
-);
-
-CREATE TABLE otus_sa.person
-(
-    id         bigint PRIMARY KEY DEFAULT nextval('otus_sa.person_seq'),
-    first_name varchar NOT NULL,
-    last_name  varchar NOT NULL,
+    id         bigint primary key default nextval('customers.personal_data_seq'),
+    login      varchar not null,
+    email      varchar not null,
+    first_name varchar not null,
+    last_name  varchar not null,
     city_id    bigint,
-    enabled    boolean            DEFAULT TRUE,
-    FOREIGN KEY (city_id) REFERENCES otus_sa.city (id)
-
+    birth_date date,
+    foreign key (city_id) references customers.personal_data (id)
 );
 
-
+create sequence customers.city_seq start with 1000;
+create table customers.city
+(
+    id   bigint primary key default nextval('customers.city_seq'),
+    name varchar not null
+);
