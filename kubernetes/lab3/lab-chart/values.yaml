@@ -15,8 +15,8 @@ service:
 postgresql:
   fullnameOverride: my-postgres
   enabled: true
-  postgresqlUsername: bXl1c2Vy
-  postgresqlPassword: cGFzc3dk
+  postgresqlUsername: myuser
+  postgresqlPassword: passwd
   postgresqlDatabase: myapp
   service:
     port: "5432"

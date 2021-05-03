@@ -4,13 +4,5 @@ metadata:
   name: lab-two-config
 data:
   DB_NAME: {{.Values.postgresql.postgresqlDatabase}}
-
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: lab-two-secret
-type: Opaque
-data:
   DB_USER: {{.Values.postgresql.postgresqlUsername}}
   DB_PASS: {{.Values.postgresql.postgresqlPassword}}
