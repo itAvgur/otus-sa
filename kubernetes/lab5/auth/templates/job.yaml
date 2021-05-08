@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{include "auth.fullname" . }}
+spec:
+  template:
+    metadata:
+      name: {{include "auth.fullname" . }}
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: check-db
+          image: postgres:latest
+          command:
+            - sh
+            - "-c"
+            - until pg_isready -h {{ include "postgresql.fullname" . }};
+              do echo waiting for database to start; sleep 3; done;
+      containers:
+        - name: post-install-job
+          image: postgres:latest
+          command:
+            - sh
+            - "-c"
+            - psql postgres://{{.Values.postgresql.postgresqlUsername}}:{{.Values.postgresql.postgresqlPassword}}@{{ include "postgresql.fullname" . }}/{{.Values.postgresql.postgresqlDatabase}} << 'EOF'
+
+              drop schema if exists auth cascade;
+              create schema auth;
+              create sequence auth.user_seq start with 1000;
+              create table auth.users
+              (
+              id       bigint primary key default nextval('auth.user_seq'),
+              login    varchar not null,
+              password varchar not null,
+              enabled  boolean            default true
+              );
+
+              EOF
+
+  backoffLimit: 4

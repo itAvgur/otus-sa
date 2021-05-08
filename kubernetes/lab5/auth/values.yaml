@@ -1,0 +1,51 @@
+replicaCount: 1
+fullnameOverride: auth-service
+
+image:
+  repository: itavgur/otus_auth
+  tag: 0.5.0
+
+application:
+  port: 8001
+
+service:
+  type: NodePort
+  port: 8001
+  targetPort: 8001
+  protocol: TCP
+
+postgresql:
+  enabled: false
+  fullnameOverride: my-postgres
+  postgresqlUsername: myuser
+  postgresqlPassword: passwd
+  postgresqlDatabase: myapp
+  service:
+    port: "5432"
+
+personServiceUrl:
+  url: "http://app-service:8000/person"
+
+ingress:
+  enabled: true
+  annotations: {
+    kubernetes.io/ingress.class: nginx
+  }
+  hosts:
+    - host: arch.homework
+      paths: [
+        { path: "/register" },
+        { path: "/login" },
+#        { path: "/check" },
+        { path: "/logout" }
+      ]
+
+serviceAccount:
+  create: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
