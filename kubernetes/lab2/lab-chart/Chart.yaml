@@ -8,6 +8,7 @@ appVersion: "0.2"
 
 dependencies:
   - name: postgresql
-    version: 10.3.13
+    version: 13.1.5
     repository: https://charts.bitnami.com/bitnami
     condition: postgreslq.enabled
+    existingSecret: lab-two-secret

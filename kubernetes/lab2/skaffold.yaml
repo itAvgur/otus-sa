@@ -1,7 +1,7 @@
 apiVersion: skaffold/v2beta11
 kind: Config
 metadata:
-  name: lab-
+  name: lab-2
 build:
   artifacts:
   - image: itavgur/otus
@@ -13,7 +13,7 @@ deploy:
     manifests:
     - config.yaml
     - postgres.yaml
-    - deployment.yaml
+    - job.yaml
     - service.yaml
     - ingress.yaml
-    - job.yaml
+    - deployment.yaml

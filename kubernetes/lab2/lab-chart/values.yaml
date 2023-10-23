@@ -12,11 +12,18 @@ service:
   targetPort: 8000
   protocol: TCP
 
+global:
+  postgresql:
+    auth:
+      username: root
+      password: root
+      database: "otus_sa"
+
 postgresql:
-  fullnameOverride: my-postgres
+  fullnameOverride: postgres
   enabled: true
-  postgresqlUsername: myuser
-  postgresqlPassword: passwd
+  postgresqlUsername: cm9vdA==
+  postgresqlPassword: cm9vdA==
   postgresqlDatabase: myapp
   service:
     port: "5432"

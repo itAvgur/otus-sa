@@ -39,6 +39,7 @@ spec:
                 name: {{ $fullName }}
                 port:
                   number: {{ $svcPort }}
+  ingressClassName: nginx
   {{- end }}
   {{- end }}
   {{- end }}

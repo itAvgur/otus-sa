@@ -23,7 +23,7 @@ spec:
             - sh
             - "-c"
             -
-              psql postgres://myuser:passwd@postgres/myapp << 'EOF'
+              psql postgres://root:root@postgres/myapp << 'EOF'
 
               DROP TABLE IF EXISTS otus_sa.person;
               DROP TABLE IF EXISTS otus_sa.city;

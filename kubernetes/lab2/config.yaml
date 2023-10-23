@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
   name: lab-two-config
 data:
-  DB_NAME: myapp
-  DB_URL: jdbc:postgresql://postgres:5432/myapp
+  DB_NAME: 'myapp'
+  DB_URL: 'jdbc:postgresql://postgres:5432/myapp'
 
 ---
 apiVersion: v1
@@ -13,5 +13,5 @@ metadata:
   name: lab-two-secret
 type: Opaque
 data:
-  DB_USER: bXl1c2Vy
-  DB_PASS: cGFzc3dk
+  DB_USER: cm9vdA==
+  DB_PASS: cm9vdA==
