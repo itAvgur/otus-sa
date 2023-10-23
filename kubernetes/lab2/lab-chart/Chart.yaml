@@ -3,8 +3,8 @@ name: lab-two-chart
 description: A Helm chart for lab-02 OTUS-SA
 
 type: application
-version: 0.2
-appVersion: "0.2"
+version: 0.2.0
+appVersion: "0.2.0"
 
 dependencies:
   - name: postgresql

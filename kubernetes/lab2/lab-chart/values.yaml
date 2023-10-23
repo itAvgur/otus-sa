@@ -17,7 +17,7 @@ global:
     auth:
       username: root
       password: root
-      database: "otus_sa"
+      database: "myapp"
 
 postgresql:
   fullnameOverride: postgres
@@ -47,4 +47,3 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
-
