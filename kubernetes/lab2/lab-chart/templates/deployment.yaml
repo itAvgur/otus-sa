@@ -52,8 +52,8 @@ spec:
               value: {{ include "postgresql.url" . }}
             - name: DB_USER
               valueFrom:
-                secretKeyRef:
-                  name: lab-two-secret
+                configMapKeyRef:
+                  name: lab-two-config
                   key: DB_USER
             - name: DB_PASS
               valueFrom:

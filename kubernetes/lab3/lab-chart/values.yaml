@@ -13,19 +13,19 @@ service:
   protocol: TCP
 
 postgresql:
-  fullnameOverride: my-postgres
-  enabled: true
-  postgresqlUsername: myuser
-  postgresqlPassword: passwd
-  postgresqlDatabase: myapp
-  service:
-    port: "5432"
+  fullnameOverride: postgres
+  auth:
+    username: root
+    existingSecret: lab-three-secret
+    secretKeys:
+      userPasswordKey: DB_PASS
+      adminPasswordKey: DB_PASS
+    database: "myapp"
+  postgresqlPassword: cm9vdA==
+  port: "5432"
 
 ingress:
   enabled: true
-  annotations: {
-    kubernetes.io/ingress.class: nginx
-  }
   hosts:
     - host: arch.homework
       paths: [

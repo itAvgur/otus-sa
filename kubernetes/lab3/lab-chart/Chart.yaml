@@ -3,11 +3,12 @@ name: lab-three-chart
 description: A Helm chart for lab-32 OTUS-SA
 
 type: application
-version: 0.3.2
-appVersion: "0.3.2"
+version: 0.3.3
+appVersion: "0.3.3"
 
 dependencies:
   - name: postgresql
-    version: 10.3.13
+    version: 13.1.5
     repository: https://charts.bitnami.com/bitnami
     condition: postgreslq.enabled
+    existingSecret: lab-three-secret
