@@ -22,7 +22,7 @@ spec:
           command:
             - sh
             - "-c"
-            - psql postgres://{{.Values.postgresql.postgresqlUsername}}:{{.Values.postgresql.postgresqlPassword}}@{{ include "postgresql.fullname" . }}/{{.Values.postgresql.postgresqlDatabase}} << 'EOF'
+            - psql postgres://{{.Values.postgresql.auth.username}}:{{.Values.postgresql.auth.password | b64dec}}@{{ include "postgresql.fullname" . }}/{{.Values.postgresql.auth.database}} << 'EOF'
 
               drop schema if exists auth cascade;
               create schema auth;

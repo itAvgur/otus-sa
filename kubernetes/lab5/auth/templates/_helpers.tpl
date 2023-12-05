@@ -66,5 +66,5 @@ Create the name of the service account to use
 {{- end -}}
 
 {{- define "postgresql.url" -}}
-{{- printf "%s%s:%s/%s" "jdbc:postgresql://" (include "postgresql.fullname" .) .Values.postgresql.service.port .Values.postgresql.postgresqlDatabase | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s%s:%s/%s" "jdbc:postgresql://" (include "postgresql.fullname" .) .Values.postgresql.auth.port .Values.postgresql.auth.database | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

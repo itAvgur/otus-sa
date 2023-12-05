@@ -47,7 +47,7 @@ spec:
                   key: DB_USER
             - name: DB_PASS
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: {{include "auth.fullname" . }}
                   key: DB_PASS
             - name: PERSON_URL

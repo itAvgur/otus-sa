@@ -1,6 +1,6 @@
-fullnameOverride: my-postgres
-postgresqlUsername: myuser
-postgresqlPassword: passwd
+fullnameOverride: postgres
+postgresqlUsername: root
+postgresqlPassword: root
 postgresqlDatabase: myapp
 
 service:

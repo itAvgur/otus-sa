@@ -15,12 +15,11 @@ service:
   protocol: TCP
 
 postgresql:
-  enabled: true
-  fullnameOverride: my-postgres
-  postgresqlUsername: myuser
-  postgresqlPassword: passwd
-  postgresqlDatabase: myapp
-  service:
+  fullnameOverride: postgres
+  app:
+    database: "myapp"
+    username: root
+    password: cm9vdA==
     port: "5432"
 
 authCheckUrl:
@@ -28,9 +27,6 @@ authCheckUrl:
 
 ingress:
   enabled: true
-  annotations: {
-    kubernetes.io/ingress.class: nginx
-  }
   hosts:
     - host: arch.homework
       paths: [
