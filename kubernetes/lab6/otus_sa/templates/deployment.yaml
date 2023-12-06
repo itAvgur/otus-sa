@@ -1,0 +1,160 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.auth.name}}
+  labels:
+  {{- include "auth.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.auth.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+  {{- include "auth.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.auth.podAnnotations }}
+      annotations:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+    {{- include "auth.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.auth.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "auth.serviceAccountName" . }}
+      securityContext:
+      {{- toYaml .Values.auth.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Values.auth.name }}
+          securityContext:
+          {{- toYaml .Values.auth.securityContext | nindent 12 }}
+          image: "{{ .Values.auth.image.repository }}:{{ .Values.auth.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.auth.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.auth.application.port }}
+              protocol: TCP
+          env:
+            - name: DB_URL
+              value: {{ include "postgresql.url" . }}
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{.Values.auth.name}}
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.auth.name}}
+                  key: DB_PASS
+            - name: PERSON_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{.Values.auth.name}}
+                  key: PERSON_URL
+          resources:
+      {{- toYaml .Values.auth.resources | nindent 12 }}
+      {{- with .Values.auth.nodeSelector }}
+      nodeSelector:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.auth.affinity }}
+      affinity:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.auth.tolerations }}
+      tolerations:
+  {{- toYaml . | nindent 8 }}
+  {{- end }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.person.name}}
+  labels:
+  {{- include "person.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.person.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+  {{- include "person.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.person.podAnnotations }}
+      annotations:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+    {{- include "person.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.person.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "person.serviceAccountName" . }}
+      securityContext:
+      {{- toYaml .Values.person.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: check-db
+          image: postgres:latest
+          command:
+            - sh
+            - "-c"
+            - until pg_isready -h {{ include "postgresql.fullname" . }};
+              do echo waiting for database to start; sleep 3; done;
+      containers:
+        - name: {{ .Values.person.name}}
+          securityContext:
+          {{- toYaml .Values.person.securityContext | nindent 12 }}
+          image: "{{ .Values.person.image.repository }}:{{ .Values.person.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.person.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.person.application.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: DB_URL
+              value: {{ include "postgresql.url" . }}
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{.Values.person.name}}
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.person.name}}
+                  key: DB_PASS
+            - name: AUTH_CHECK_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{.Values.person.name}}
+                  key: AUTH_CHECK_URL
+      {{- with .Values.person.nodeSelector }}
+      nodeSelector:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.person.affinity }}
+      affinity:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.person.tolerations }}
+      tolerations:
+  {{- toYaml . | nindent 8 }}
+  {{- end }}

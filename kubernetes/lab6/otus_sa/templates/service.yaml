@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.auth.name}}
+  labels:
+  {{- include "auth.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.auth.service.type }}
+  ports:
+    - port: {{ .Values.auth.service.port }}
+      targetPort: {{ .Values.auth.service.targetPort }}
+      protocol: {{ .Values.auth.service.protocol }}
+  selector:
+  {{- include "auth.selectorLabels" . | nindent 4 }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.person.name}}
+  labels:
+  {{- include "person.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.person.service.type }}
+  ports:
+    - port: {{ .Values.person.service.port }}
+      targetPort: {{ .Values.person.service.targetPort }}
+      protocol: {{ .Values.person.service.protocol }}
+  selector:
+  {{- include "person.selectorLabels" . | nindent 4 }}
+

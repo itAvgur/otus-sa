@@ -3,64 +3,55 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.18</version>
-        <relativePath/>
+        <groupId>com.itavgur.otus.sa</groupId>
+        <artifactId>lab</artifactId>
+        <version>0.6.0</version>
     </parent>
-    <groupId>com.itavgur.otus.sa</groupId>
-    <artifactId>lab</artifactId>
+    <artifactId>person</artifactId>
     <version>0.6.0</version>
-    <name>lab</name>
-    <packaging>pom</packaging>
-    <description>OTUS-SA</description>
-
+    <name>person</name>
+    <description>Person service</description>
     <properties>
         <java.version>1.8</java.version>
-        <micrometer.version>1.12.0</micrometer.version>
-        <assertj.version>3.24.2</assertj.version>
+        <junit.version>4.13.2</junit.version>
+        <javax.validation.version>2.0.1.Final</javax.validation.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
     </properties>
-    º
-
-    <modules>
-        <module>person</module>
-        <module>auth</module>
-    </modules>
-
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax.validation.version}</version>
         </dependency>
-        <!-- monitoring -->
+        <!--DB-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>${micrometer.version}</version>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- utilities -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- tests -->
+        <!--Web-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Security -->
+
+        <!--Testing-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>${assertj.version}</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 

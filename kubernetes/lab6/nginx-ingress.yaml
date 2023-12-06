@@ -13,6 +13,6 @@ controller:
     type: NodePort
 
   metrics:
-    enabled: false
+    enabled: true
     serviceMonitor:
-      enabled: true
+      enabled: false

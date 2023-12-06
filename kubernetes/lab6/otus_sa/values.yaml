@@ -1,0 +1,83 @@
+auth:
+  replicaCount: 1
+  name: auth-service
+
+  image:
+    repository: ygmelnikov/otus_auth
+    tag: 0.6.0
+
+  application:
+    port: 8001
+
+  service:
+    type: NodePort
+    port: 8001
+    targetPort: 8001
+    protocol: TCP
+  personServiceUrl:
+    url: "http://person-service:8000/person"
+
+person:
+  replicaCount: 1
+  name: person-service
+  image:
+    repository: ygmelnikov/otus_person
+    tag: 0.6.0
+
+  application:
+    port: 8000
+
+  service:
+    type: NodePort
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
+
+  postgresql:
+    fullnameOverride: postgres
+    app:
+      database: "myapp"
+      username: root
+      password: cm9vdA==
+      port: "5432"
+  authCheckUrl: "http://auth-service:8001/check"
+
+postgresql:
+  fullnameOverride: postgres
+  auth:
+    database: "myapp"
+    username: root
+    password: cm9vdA==
+    port: "5432"
+  person:
+    database: "myapp"
+    username: root
+    password: cm9vdA==
+    port: "5432"
+
+ingress:
+  enabled: true
+  auth:
+    - host: arch.homework
+      paths: [
+        { path: "/register" },
+        { path: "/login" },
+        { path: "/check" },
+        { path: "/logout" }
+      ]
+  person:
+    - host: arch.homework
+      paths: [
+        { path: "/person" },
+        { path: "/health" }
+      ]
+
+serviceAccount:
+  create: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+

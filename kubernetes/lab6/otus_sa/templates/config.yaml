@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{.Values.auth.name}}
+data:
+  DB_NAME: '{{.Values.postgresql.auth.database}}'
+  DB_USER: '{{.Values.postgresql.auth.username}}'
+  PERSON_URL: '{{.Values.auth.personServiceUrl.url}}'
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{.Values.auth.name}}
+type: Opaque
+data:
+  DB_PASS: {{.Values.postgresql.auth.password}}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{.Values.person.name}}
+data:
+  DB_NAME: '{{.Values.postgresql.person.database}}'
+  DB_USER: '{{.Values.postgresql.person.username}}'
+  AUTH_CHECK_URL: '{{.Values.person.authCheckUrl}}'
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{.Values.person.name}}
+type: Opaque
+data:
+  DB_PASS: {{.Values.postgresql.person.password}}

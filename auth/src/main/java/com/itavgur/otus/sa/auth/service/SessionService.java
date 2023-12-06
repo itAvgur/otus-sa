@@ -27,7 +27,6 @@ public class SessionService {
     IMap<String, String> userSessions;
 
     @Autowired
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     public SessionService(HazelcastInstance hazelcastAuthInstance) {
         userSessions = hazelcastAuthInstance.getMap("userSessions");
     }

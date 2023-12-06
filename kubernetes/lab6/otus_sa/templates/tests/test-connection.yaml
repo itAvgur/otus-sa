@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{.Values.auth.name }}-test-connection"
+  labels:
+    {{- include "auth.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: [ 'wget' ]
+      args: [ '{{.Values.auth.name}}:{{ .Values.auth.service.port }}' ]
+  restartPolicy: Never
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{.Values.person.name }}-test-connection"
+  labels:
+    {{- include "person.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: [ 'wget' ]
+      args: [ '{{.Values.person.name}}:{{ .Values.person.service.port }}' ]
+  restartPolicy: Never
+
