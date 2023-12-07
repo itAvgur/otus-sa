@@ -1,0 +1,6 @@
+auth:
+  enabled: false
+master:
+  count: 1
+replica:
+  replicaCount: 0

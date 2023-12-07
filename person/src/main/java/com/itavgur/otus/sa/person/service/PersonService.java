@@ -36,6 +36,11 @@ public class PersonService {
         return getPersonDto(person);
     }
 
+    public PersonDto getPersonDtoById(Long id, String userLogin) throws NotFoundException {
+        Person person = getPersonEntity(id);
+        return person.getLogin().equals(userLogin) ? getPersonDto(person) : null;
+    }
+
     public PersonDto createPerson(PersonDto personDto) {
         Person personNew = personRepository.save(getPersonFromDto(personDto, null));
         return getPersonDto(personNew);
@@ -57,6 +62,7 @@ public class PersonService {
 
     private PersonDto getPersonDto(Person person) {
         return new PersonDto(
+                person.getId(),
                 person.getLogin(),
                 person.getEmail(),
                 person.getFirstName(),

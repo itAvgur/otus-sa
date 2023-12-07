@@ -1,0 +1,692 @@
+{
+  "info": {
+    "_postman_id": "65bb012a-70c1-4457-8cb7-c7ee00d0b8d0",
+    "name": "OTUS-SA LAB6 Idemponency",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "21634154"
+  },
+  "item": [
+    {
+      "name": "sign-up user1",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "var moment = require('moment')\r",
+              "\r",
+              "pm.collectionVariables.set(\"login\",pm.variables.replaceIn('{{$randomUserName}}'))\r",
+              "pm.collectionVariables.set(\"password\",pm.variables.replaceIn('{{$randomPassword}}'))\r",
+              "pm.collectionVariables.set(\"email\",pm.variables.replaceIn('{{$randomEmail}}'))\r",
+              "pm.collectionVariables.set(\"firstName\",pm.variables.replaceIn('{{$randomFirstName}}'))\r",
+              "pm.collectionVariables.set(\"lastName\",pm.variables.replaceIn('{{$randomLastName}}'))\r",
+              "pm.collectionVariables.set(\"birthDate\",moment(pm.variables.replaceIn('{{$randomDatePast}}')).format(\"YYYY-MM-DD\"))\r",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"login\": \"{{login}}\", \r\n\t\"password\": \"{{password}}\",\r\n\t\"email\": \"{{email}}\",\r\n\t\"firstName\": \"{{firstName}}\",\r\n\t\"lastName\": \"{{lastName}}\",\r\n    \"birthDate\": \"{{birthDate}}\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}:{{authPort}}/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "port": "{{authPort}}",
+          "path": [
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "sign-in",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"json\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.login).to.eql(pm.variables.get(\"login\"));\r",
+              "    pm.expect(jsonData.password).to.eql(pm.variables.get(\"password\"));\r",
+              "    pm.expect(jsonData.enabled).to.eql(true);\r",
+              "    pm.expect(jsonData.id).not.null; \r",
+              "    pm.collectionVariables.set(\"customerId\",jsonData.id);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"login\": \"{{login}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}:{{authPort}}/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "port": "{{authPort}}",
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getting profile by cookie",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"test json\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.firstName).to.eql(pm.variables.get(\"firstName\"));\r",
+              "    pm.expect(jsonData.lastName).to.eql(pm.variables.get(\"lastName\"));\r",
+              "    pm.expect(jsonData.id).to.eql(parseInt(pm.collectionVariables.get(\"customerId\")));\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}:{{personPort}}/person",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "port": "{{personPort}}",
+          "path": [
+            "person"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getting person info by id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"test json\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.firstName).to.eql(pm.variables.get(\"firstName\"));\r",
+              "    pm.expect(jsonData.lastName).to.eql(pm.variables.get(\"lastName\"));\r",
+              "    pm.expect(jsonData.id).to.eql(parseInt(pm.collectionVariables.get(\"customerId\")));\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}:{{personPort}}/person/{{customerId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "port": "{{personPort}}",
+          "path": [
+            "person",
+            "{{customerId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "send order, try 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"json\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.customerId).to.eql(parseInt(pm.collectionVariables.get(\"customerId\")));\r",
+              "    pm.expect(jsonData.description).to.eql(pm.collectionVariables.get(\"orderDesc\"));\r",
+              "    pm.expect(jsonData.sum).to.eql(parseInt(pm.collectionVariables.get(\"orderSum\")));\r",
+              "    pm.expect(jsonData.state).to.eql(\"READY\");\r",
+              "    pm.collectionVariables.set(\"orderId\",jsonData.id);\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.collectionVariables.set(\"orderIdempKey\",pm.variables.replaceIn('{{$guid}}'))",
+              "pm.collectionVariables.set(\"orderDesc\",pm.variables.replaceIn('{{$randomCompanyName}}'))",
+              "pm.collectionVariables.set(\"orderSum\",pm.variables.replaceIn('{{$randomInt}}'))"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"customerId\": {{customerId}},\n    \"idempotencyKey\": \"{{orderIdempKey}}\",\n    \"sum\": {{orderSum}},\n    \"state\": \"READY\",\n    \"description\": \"{{orderDesc}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}:{{orderPort}}/order",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "port": "{{orderPort}}",
+          "path": [
+            "order"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "send order, try 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 409\", function () {",
+              "    pm.response.to.have.status(409);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"customerId\": {{customerId}},\n    \"idempotencyKey\": \"{{orderIdempKey}}\",\n    \"sum\": {{orderSum}},\n    \"state\": \"READY\",\n    \"description\": \"{{orderDesc}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}:{{orderPort}}/order",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "port": "{{orderPort}}",
+          "path": [
+            "order"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"json\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.customerId).to.eql(parseInt(pm.collectionVariables.get(\"customerId\")));\r",
+              "    pm.expect(jsonData.description).to.eql(pm.collectionVariables.get(\"orderDesc\"));\r",
+              "    pm.expect(jsonData.sum).to.eql(parseInt(pm.collectionVariables.get(\"orderSum\")));\r",
+              "    pm.expect(jsonData.state).to.eql(\"READY\");\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}:{{orderPort}}/order/{{orderId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "port": "{{orderPort}}",
+          "path": [
+            "order",
+            "{{orderId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 400\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"json\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.customerId).to.eql(parseInt(pm.collectionVariables.get(\"customerId\")));",
+              "    pm.expect(jsonData.description).to.eql(pm.collectionVariables.get(\"orderDesc\"));",
+              "    pm.expect(jsonData.sum).to.eql(parseInt(pm.collectionVariables.get(\"orderSum\")));",
+              "    pm.expect(jsonData.state).to.eql(\"DONE\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.collectionVariables.set(\"orderDesc\",pm.variables.replaceIn('{{$randomCompanyName}}'))",
+              "pm.collectionVariables.set(\"orderSum\",pm.variables.replaceIn('{{$randomInt}}'))"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": {{orderId}},\n    \"customerId\": {{customerId}},\n    \"sum\": {{orderSum}},\n    \"state\": \"DONE\",\n    \"description\": \"{{orderDesc}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}:{{orderPort}}/order",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "port": "{{orderPort}}",
+          "path": [
+            "order"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get updated order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 400\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"json\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.customerId).to.eql(parseInt(pm.collectionVariables.get(\"customerId\")));\r",
+              "    pm.expect(jsonData.description).to.eql(pm.collectionVariables.get(\"orderDesc\"));\r",
+              "    pm.expect(jsonData.sum).to.eql(parseInt(pm.collectionVariables.get(\"orderSum\")));\r",
+              "    pm.expect(jsonData.state).to.eql(\"DONE\");\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}:{{orderPort}}/order/{{orderId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "port": "{{orderPort}}",
+          "path": [
+            "order",
+            "{{orderId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 400\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}:{{orderPort}}/order/{{orderId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "port": "{{orderPort}}",
+          "path": [
+            "order",
+            "{{orderId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get deleted order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 204\", function () {\r",
+              "    pm.response.to.have.status(204);\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}:{{orderPort}}/order/{{orderId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "port": "{{orderPort}}",
+          "path": [
+            "order",
+            "{{orderId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update deleted order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 204\", function () {\r",
+              "    pm.response.to.have.status(204);\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": {{orderId}},\n    \"customerId\": {{customerId}},\n    \"sum\": {{orderSum}},\n    \"state\": \"CLOSED\",\n    \"description\": \"{{orderDesc}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}:{{orderPort}}/order",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "port": "{{orderPort}}",
+          "path": [
+            "order"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://arch.homework"
+    },
+    {
+      "key": "personPort",
+      "value": "80",
+      "type": "string"
+    },
+    {
+      "key": "authPort",
+      "value": "80",
+      "type": "string"
+    },
+    {
+      "key": "orderPort",
+      "value": "80",
+      "type": "string"
+    },
+    {
+      "key": "login",
+      "value": ""
+    },
+    {
+      "key": "password",
+      "value": ""
+    },
+    {
+      "key": "email",
+      "value": ""
+    },
+    {
+      "key": "firstName",
+      "value": ""
+    },
+    {
+      "key": "lastName",
+      "value": ""
+    },
+    {
+      "key": "birthDate",
+      "value": ""
+    },
+    {
+      "key": "orderIdempKey",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "orderDesc",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "orderSum",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "customerId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "orderId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

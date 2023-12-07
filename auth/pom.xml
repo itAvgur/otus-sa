@@ -5,10 +5,10 @@
     <parent>
         <groupId>com.itavgur.otus.sa</groupId>
         <artifactId>lab</artifactId>
-        <version>0.6.0</version>
+        <version>0.6.1</version>
     </parent>
     <artifactId>auth</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
     <name>auth</name>
     <description>auth service</description>
     <properties>
@@ -16,6 +16,7 @@
         <javax.validation.version>2.0.2</javax.validation.version>
         <junit.version>4.13.2</junit.version>
         <hazelcast.version>5.3.6</hazelcast.version>
+        <flyway.version>9.22.3</flyway.version>
     </properties>
     <dependencies>
         <dependency>
@@ -39,6 +40,11 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
         </dependency>
         <dependency>
             <groupId>com.hazelcast</groupId>

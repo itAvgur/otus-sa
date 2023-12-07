@@ -49,12 +49,18 @@ public class PersonController {
         return personalService.getPersonFromDto(userLogin);
     }
 
+    @GetMapping("/{id}")
+    public PersonDto getPersonById(@PathVariable(name = "id") Long id) throws NotFoundException {
+        String userLogin = checkAuthentication();
+        return personalService.getPersonDtoById(id, userLogin);
+    }
+
     @PostMapping
     public PersonDto createPersonal(@RequestBody PersonDto personDto) {
         return personalService.createPerson(personDto);
     }
 
-    @PutMapping("")
+    @PutMapping
     public PersonDto updatePersonal(@RequestBody PersonDto personDto) throws NotFoundException {
         String userLogin = checkAuthentication();
         return personalService.updatePerson(personDto, userLogin);

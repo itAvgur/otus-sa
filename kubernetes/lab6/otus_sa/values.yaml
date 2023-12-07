@@ -1,10 +1,36 @@
+order:
+  replicaCount: 1
+  name: order-service
+
+  image:
+    repository: ygmelnikov/otus_order
+    tag: 0.6.1
+
+  application:
+    port: 8002
+
+  probe:
+    liveness:
+      initDelayTime: 45
+    readiness:
+      initDelayTime: 45
+
+  service:
+    type: NodePort
+    port: 8002
+    targetPort: 8002
+    protocol: TCP
+  personServiceUrl: "http://person-service:8000/person"
+  authCheckUrl: "http://auth-service:8001/check"
+  redisHost: redis-master.default.svc.cluster.local
+
 auth:
   replicaCount: 1
   name: auth-service
 
   image:
     repository: ygmelnikov/otus_auth
-    tag: 0.6.0
+    tag: 0.6.1
 
   application:
     port: 8001
@@ -14,18 +40,23 @@ auth:
     port: 8001
     targetPort: 8001
     protocol: TCP
-  personServiceUrl:
-    url: "http://person-service:8000/person"
+  personServiceUrl: "http://person-service:8000/person"
 
 person:
   replicaCount: 1
   name: person-service
   image:
     repository: ygmelnikov/otus_person
-    tag: 0.6.0
+    tag: 0.6.1
 
   application:
     port: 8000
+
+  probe:
+    liveness:
+      initDelayTime: 45
+    readiness:
+      initDelayTime: 45
 
   service:
     type: NodePort
@@ -48,11 +79,19 @@ postgresql:
     database: "myapp"
     username: root
     password: cm9vdA==
+    schema: auth
     port: "5432"
   person:
     database: "myapp"
     username: root
     password: cm9vdA==
+    schema: customers
+    port: "5432"
+  order:
+    database: "myapp"
+    username: root
+    password: cm9vdA==
+    schema: orders
     port: "5432"
 
 ingress:
@@ -68,8 +107,12 @@ ingress:
   person:
     - host: arch.homework
       paths: [
-        { path: "/person" },
-        { path: "/health" }
+        { path: "/person" }
+      ]
+  order:
+    - host: arch.homework
+      paths: [
+        { path: "/order" }
       ]
 
 serviceAccount:

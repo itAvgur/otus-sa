@@ -1,53 +1,11 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{.Values.auth.name}}
-spec:
-  template:
-    metadata:
-      name: {{.Values.auth.name}}_sql_init
-    spec:
-      restartPolicy: Never
-      initContainers:
-        - name: check-db
-          image: postgres:latest
-          command:
-            - sh
-            - "-c"
-            - until pg_isready -h {{ include "postgresql.fullname" . }};
-              do echo waiting for database to start; sleep 3; done;
-      containers:
-        - name: post-install-job
-          image: postgres:latest
-          command:
-            - sh
-            - "-c"
-            - psql postgres://{{.Values.postgresql.auth.username}}:{{.Values.postgresql.auth.password | b64dec}}@{{include "postgresql.fullname" .}}/{{.Values.postgresql.auth.database}} << 'EOF'
-
-              drop schema if exists auth cascade;
-              create schema auth;
-              create sequence auth.user_seq start with 1000;
-              create table auth.users
-              (
-              id       bigint primary key default nextval('auth.user_seq'),
-              login    varchar not null,
-              password varchar not null,
-              enabled  boolean            default true
-              );
-
-              EOF
-
-  backoffLimit: 4
-
----
-apiVersion: batch/v1
-kind: Job
-metadata:
   name: {{.Values.person.name}}
 spec:
   template:
     metadata:
-      name: {{.Values.person.name}}_sql_init
+      name: {{.Values.person.name}}_sql_populate
     spec:
       restartPolicy: Never
       initContainers:
@@ -65,29 +23,6 @@ spec:
             - sh
             - "-c"
             - psql postgres://{{.Values.postgresql.person.username}}:{{.Values.postgresql.person.password | b64dec}}@{{ include "postgresql.fullname" . }}/{{.Values.postgresql.person.database}} << 'EOF'
-
-              drop schema if exists customers cascade;
-              create schema customers;
-
-              create sequence customers.personal_data_seq start with 1000;
-              create table customers.personal_data
-              (
-              id         bigint primary key default nextval('customers.personal_data_seq'),
-              login      varchar not null,
-              email      varchar not null,
-              first_name varchar not null,
-              last_name  varchar not null,
-              city_id    bigint,
-              birth_date date,
-              foreign key (city_id) references customers.personal_data (id)
-              );
-
-              create sequence customers.city_seq start with 1000;
-              create table customers.city
-              (
-              id   bigint primary key default nextval('customers.city_seq'),
-              name varchar not null
-              );
 
               INSERT INTO customers.city (name)
               VALUES ('Moscow'),

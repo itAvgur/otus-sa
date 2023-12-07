@@ -29,3 +29,18 @@ spec:
   selector:
   {{- include "person.selectorLabels" . | nindent 4 }}
 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.order.name}}
+  labels:
+  {{- include "order.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.order.service.type }}
+  ports:
+    - port: {{ .Values.order.service.port }}
+      targetPort: {{ .Values.order.service.targetPort }}
+      protocol: {{ .Values.order.service.protocol }}
+  selector:
+  {{- include "order.selectorLabels" . | nindent 4 }}

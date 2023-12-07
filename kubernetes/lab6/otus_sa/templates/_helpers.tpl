@@ -55,6 +55,18 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+order labels
+*/}}
+{{- define "order.labels" -}}
+helm.sh/chart: {{ include "otus_sa.chart" . }}
+{{ include "order.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
 Selector auth labels
 */}}
 {{- define "auth.selectorLabels" -}}
@@ -67,6 +79,14 @@ Selector person labels
 */}}
 {{- define "person.selectorLabels" -}}
 app.kubernetes.io/name: {{.Values.person.name}}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Selector order labels
+*/}}
+{{- define "order.selectorLabels" -}}
+app.kubernetes.io/name: {{.Values.order.name}}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
@@ -96,6 +116,12 @@ Create the name of the service account to use
 {{- printf .Values.postgresql.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "postgresql.url" -}}
-{{- printf "%s%s:%s/%s" "jdbc:postgresql://" (include "postgresql.fullname" .) .Values.postgresql.auth.port .Values.postgresql.auth.database | trunc 63 | trimSuffix "-" -}}
+{{- define "postgres_auth.url" -}}
+{{- printf "%s%s:%s/%s?currentSchema=%s" "jdbc:postgresql://" (include "postgresql.fullname" .) .Values.postgresql.auth.port .Values.postgresql.auth.database .Values.postgresql.auth.schema | trunc 128 | trimSuffix "-" -}}
+{{- end -}}
+{{- define "postgres_person.url" -}}
+{{- printf "%s%s:%s/%s?currentSchema=%s" "jdbc:postgresql://" (include "postgresql.fullname" .) .Values.postgresql.person.port .Values.postgresql.person.database .Values.postgresql.person.schema | trunc 128 | trimSuffix "-" -}}
+{{- end -}}
+{{- define "postgres_order.url" -}}
+{{- printf "%s%s:%s/%s?currentSchema=%s" "jdbc:postgresql://" (include "postgresql.fullname" .) .Values.postgresql.order.port .Values.postgresql.order.database .Values.postgresql.order.schema | trunc 128 | trimSuffix "-" -}}
 {{- end -}}

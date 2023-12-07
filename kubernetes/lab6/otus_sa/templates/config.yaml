@@ -5,7 +5,8 @@ metadata:
 data:
   DB_NAME: '{{.Values.postgresql.auth.database}}'
   DB_USER: '{{.Values.postgresql.auth.username}}'
-  PERSON_URL: '{{.Values.auth.personServiceUrl.url}}'
+  DB_SCHEMA: '{{.Values.postgresql.auth.schema}}'
+  PERSON_URL: '{{.Values.auth.personServiceUrl}}'
 
 ---
 apiVersion: v1
@@ -24,6 +25,7 @@ metadata:
 data:
   DB_NAME: '{{.Values.postgresql.person.database}}'
   DB_USER: '{{.Values.postgresql.person.username}}'
+  DB_SCHEMA: '{{.Values.postgresql.person.schema}}'
   AUTH_CHECK_URL: '{{.Values.person.authCheckUrl}}'
 
 ---
@@ -34,3 +36,25 @@ metadata:
 type: Opaque
 data:
   DB_PASS: {{.Values.postgresql.person.password}}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{.Values.order.name}}
+data:
+  DB_NAME: '{{.Values.postgresql.order.database}}'
+  DB_USER: '{{.Values.postgresql.order.username}}'
+  DB_SCHEMA: '{{.Values.postgresql.order.schema}}'
+  AUTH_CHECK_URL: '{{.Values.order.authCheckUrl}}'
+  PERSON_URL: '{{.Values.order.personServiceUrl}}'
+  REDIS_HOST: '{{.Values.order.redisHost}}'
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{.Values.order.name}}
+type: Opaque
+data:
+  DB_PASS: {{.Values.postgresql.order.password}}

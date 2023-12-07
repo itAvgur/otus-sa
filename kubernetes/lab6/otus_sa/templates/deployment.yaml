@@ -39,7 +39,7 @@ spec:
               protocol: TCP
           env:
             - name: DB_URL
-              value: {{ include "postgresql.url" . }}
+              value: {{ include "postgres_auth.url" . }}
             - name: DB_USER
               valueFrom:
                 configMapKeyRef:
@@ -119,10 +119,12 @@ spec:
               containerPort: {{ .Values.person.application.port }}
               protocol: TCP
           livenessProbe:
+            initialDelaySeconds: {{ .Values.person.probe.liveness.initDelayTime}}
             httpGet:
               path: /health
               port: http
           readinessProbe:
+            initialDelaySeconds: {{ .Values.person.probe.readiness.initDelayTime}}
             httpGet:
               path: /health
               port: http
@@ -130,7 +132,7 @@ spec:
           {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: DB_URL
-              value: {{ include "postgresql.url" . }}
+              value: {{ include "postgres_person.url" . }}
             - name: DB_USER
               valueFrom:
                 configMapKeyRef:
@@ -155,6 +157,107 @@ spec:
       {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.person.tolerations }}
+      tolerations:
+  {{- toYaml . | nindent 8 }}
+  {{- end }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.order.name}}
+  labels:
+  {{- include "order.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.person.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+  {{- include "order.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.order.podAnnotations }}
+      annotations:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+    {{- include "order.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.order.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "person.serviceAccountName" . }}
+      securityContext:
+      {{- toYaml .Values.order.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: check-db
+          image: postgres:latest
+          command:
+            - sh
+            - "-c"
+            - until pg_isready -h {{ include "postgresql.fullname" . }};
+              do echo waiting for database to start; sleep 3; done;
+      containers:
+        - name: {{ .Values.order.name}}
+          securityContext:
+          {{- toYaml .Values.order.securityContext | nindent 12 }}
+          image: "{{ .Values.order.image.repository }}:{{ .Values.order.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.order.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.order.application.port }}
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: {{ .Values.order.probe.liveness.initDelayTime}}
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            initialDelaySeconds: {{ .Values.order.probe.liveness.initDelayTime}}
+            httpGet:
+              path: /health
+              port: http
+          resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: DB_URL
+              value: {{ include "postgres_order.url" . }}
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{.Values.order.name}}
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.order.name}}
+                  key: DB_PASS
+            - name: AUTH_CHECK_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{.Values.order.name}}
+                  key: AUTH_CHECK_URL
+            - name: PERSON_GET_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{.Values.order.name}}
+                  key: PERSON_URL
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{.Values.order.name}}
+                  key: REDIS_HOST
+      {{- with .Values.order.nodeSelector }}
+      nodeSelector:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.order.affinity }}
+      affinity:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.order.tolerations }}
       tolerations:
   {{- toYaml . | nindent 8 }}
   {{- end }}

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.itavgur.otus.sa</groupId>
     <artifactId>lab</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
     <name>lab</name>
     <packaging>pom</packaging>
     <description>OTUS-SA</description>
@@ -20,11 +20,11 @@
         <micrometer.version>1.12.0</micrometer.version>
         <assertj.version>3.24.2</assertj.version>
     </properties>
-    º
 
     <modules>
-        <module>person</module>
+        <module>order</module>
         <module>auth</module>
+        <module>person</module>
     </modules>
 
     <dependencies>

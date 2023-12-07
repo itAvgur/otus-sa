@@ -3,5 +3,5 @@ name: otus-sa
 description: otus_sa lab
 
 type: application
-version: 0.6.0
-appVersion: "0.6.0"
+version: 0.6.1
+appVersion: "0.6.1"

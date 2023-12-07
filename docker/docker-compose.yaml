@@ -1,0 +1,69 @@
+version: "3.8"
+services:
+  order:
+    image: ygmelnikov/otus_order:0.6.1
+    container_name: order_sa
+    networks:
+      - otus
+    ports:
+      - "8002:8002"
+    depends_on:
+      - postgres_db
+      - redis_otus
+      - person
+    environment:
+      - DB_URL=jdbc:postgresql://postgres_db:5432/otus_sa?currentSchema=orders
+      - DB_USER=root
+      - DB_PASS=root
+      - AUTH_CHECK_URL=http://auth:8001/check
+      - PERSON_GET_URL=http://person:8000/person
+      - REDIS_HOST=redis_otus
+  person:
+    image: ygmelnikov/otus_person:0.6.1
+    container_name: person_sa
+    networks:
+      - otus
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres_db
+    environment:
+      - DB_URL=jdbc:postgresql://postgres_db:5432/otus_sa?currentSchema=customers
+      - DB_USER=root
+      - DB_PASS=root
+      - AUTH_CHECK_URL=http://auth:8001/check
+  auth:
+    image: ygmelnikov/otus_auth:0.6.1
+    container_name: auth_sa
+    networks:
+      - otus
+    ports:
+      - "8001:8001"
+    depends_on:
+      - postgres_db
+    environment:
+      - DB_URL=jdbc:postgresql://postgres_db:5432/otus_sa?currentSchema=auth
+      - DB_USER=root
+      - DB_PASS=root
+      - PERSON_URL=http://person:8000/person
+  postgres_db:
+    image: postgres
+    container_name: postgres_otus
+    networks:
+      - otus
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=otus_sa
+  redis_otus:
+    image: redis
+    container_name: redis_otus
+    networks:
+      - otus
+    ports:
+      - "6379:6379"
+
+networks:
+  otus:
